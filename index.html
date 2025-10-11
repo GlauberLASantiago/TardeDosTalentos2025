@@ -5,46 +5,239 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarde de Talentos - Igreja Presbiteriana Filadélfia</title>
     <style>
-        body, html {
+        /* Define as cores da paleta ENEC como variáveis CSS para fácil reutilização */
+        :root {
+            --cor-primaria: #1E40FB;
+            --cor-secundaria: #FC0019;
+            --cor-acento: #FECF2F;
+            --cor-destaque: #1FD025;
+            --cor-escura: #434344;
+            --cor-clara: #F9F9F9;
+            --cor-sombra: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos gerais para o corpo da página */
+        body {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* A rolagem será controlada pelo canvas */
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #434344; /* Cor de fundo para o corpo */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--cor-clara);
+            color: var(--cor-escura);
+            overflow-x: hidden; /* Evita rolagem horizontal */
         }
-        canvas {
+
+        /* Container principal para centralizar o conteúdo */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Estilo do cabeçalho */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            /* Animação de entrada */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUP 0.8s ease-out forwards;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: var(--cor-escura);
+            margin: 0;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--cor-primaria);
+            margin-top: 10px;
+        }
+
+        /* Seção de detalhes do evento */
+        .detalhes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .detalhe-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--cor-sombra);
+            /* Animação de entrada (será controlada por JS) */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .detalhe-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .detalhe-item span {
+            font-size: 2rem;
             display: block;
-            background-color: #F9F9F9; /* Cor de fundo do canvas */
+            margin-bottom: 10px;
+        }
+
+        /* Título da seção de programação */
+        .titulo-secao {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        /* Linha decorativa abaixo do título */
+        .titulo-secao::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--cor-primaria);
+            border-radius: 2px;
+        }
+        
+        /* Lista da programação */
+        .lista-programa {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item-programa {
+            background-color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px var(--cor-sombra);
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden; /* Para a linha lateral */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* Animação de entrada (será controlada por JS) */
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        
+        .item-programa.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Efeito de hover nos itens da lista */
+        .item-programa:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(30, 64, 251, 0.2);
+        }
+
+        /* Linha colorida na lateral do card */
+        .item-programa::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 10px;
+            height: 100%;
+            /* As cores são definidas inline no HTML para variar */
+        }
+        
+        .item-programa .conteudo {
+            flex-grow: 1;
+            padding-left: 20px;
+        }
+
+        .item-programa .titulo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--cor-secundaria);
+            margin: 0 0 5px 0;
+        }
+        
+        .item-programa .participantes {
+            font-size: 0.9rem;
+            color: var(--cor-escura);
+        }
+
+        .item-programa .duracao {
+            font-style: italic;
+            font-size: 1rem;
+            margin-left: 20px;
+            white-space: nowrap; /* Impede que o texto quebre */
+        }
+
+        /* Estilo do rodapé */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            background-color: var(--cor-escura);
+            color: var(--cor-clara);
+            font-size: 0.9rem;
+        }
+
+        /* Animação de Fade In e Subida */
+        @keyframes fadeInUP {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <canvas id="eventCanvas"></canvas>
+
+    <div class="container">
+        <header>
+            <h1>Tarde de Talentos</h1>
+            <p>Igreja Presbiteriana Filadélfia de São Carlos</p>
+        </header>
+
+        <section class="detalhes">
+            <div class="detalhe-item">
+                <span>📅</span>
+                <p>Sábado (11/10), às 15h</p>
+            </div>
+            <div class="detalhe-item">
+                <span>📍</span>
+                <p>Salão Social da Igreja</p>
+            </div>
+            <div class="detalhe-item">
+                <span>⏱️</span>
+                <p>Duração: 90 minutos</p>
+            </div>
+            <div class="detalhe-item">
+                <span>🎤</span>
+                <p>Apresentador: Glauber Santiago</p>
+            </div>
+        </section>
+
+        <main>
+            <h2 class="titulo-secao">Programação</h2>
+            <ul class="lista-programa">
+                <!-- Os itens da programação serão inseridos aqui pelo JavaScript -->
+            </ul>
+        </main>
+    </div>
+
+    <footer>
+        <p>Página formatada por IA baseada em um texto enviado pelo usuário.</p>
+        <p>Gerado em <span id="generationDate"></span>.</p>
+    </footer>
 
     <script>
-        const canvas = document.getElementById('eventCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // --- Paleta de Cores (ENEC) ---
-        const colors = {
-            primary: '#1E40FB',   // Azul
-            secondary: '#FC0019', // Vermelho
-            accent: '#FECF2F',    // Amarelo
-            highlight: '#1FD025',  // Verde
-            dark: '#434344',      // Cinza Escuro
-            light: '#F9F9F9'      // Cinza Claro (Fundo)
-        };
-
-        // --- Conteúdo do Evento ---
+        // --- Dados do Evento ---
         const eventData = {
-            title: "Tarde de Talentos",
-            subtitle: "Igreja Presbiteriana Filadélfia de São Carlos",
-            details: [
-                { icon: '📅', text: `Sábado (11/10), às 15h` },
-                { icon: '📍', text: 'Salão Social da Igreja' },
-                { icon: '⏱️', text: 'Duração: 90 minutos' },
-                { icon: '🎤', text: 'Apresentador: Glauber Santiago' }
-            ],
             program: [
                 { id: 1, title: 'Cantarei', duration: 5, participants: 'Lide, Paulo Ricardo, João Pedro' },
                 { id: 2, title: 'Apresentação de Violinos', duration: 4, participants: 'Sophie Tassi e Estela Diniz' },
@@ -66,312 +259,84 @@
                 { id: 18, title: 'Batman e Robin', duration: 5, participants: 'Estevão Diniz e Arthur Diniz' },
                 { id: 19, title: 'Família Luchnos', duration: 5, participants: 'Priscila, Estevão, Abner, Estela, Ariela, Arthur (todos Diniz)' },
                 { id: 20, title: 'Sr. Arlindo', duration: 5, participants: 'Arlindo Pinguieri' }
-            ]
+            ],
+            colors: ['var(--cor-primaria)', 'var(--cor-secundaria)', 'var(--cor-acento)', 'var(--cor-destaque)']
         };
+        
+        // --- Função para popular a lista da programação ---
+        function populateProgramList() {
+            const list = document.querySelector('.lista-programa');
+            if (!list) return;
 
-        // --- Estado da Aplicação ---
-        let width, height;
-        let scrollY = 0;
-        let targetScrollY = 0;
-        let totalContentHeight = 0;
-        let mouse = { x: 0, y: 0 };
-        let hoveredItemId = null;
-        const particles = [];
+            eventData.program.forEach((item, index) => {
+                // Cria o elemento <li>
+                const listItem = document.createElement('li');
+                listItem.className = 'item-programa';
+                
+                // Define a cor da borda lateral, alternando entre as cores da paleta
+                const color = eventData.colors[index % eventData.colors.length];
+                listItem.style.setProperty('--item-color', color);
+                listItem.style.borderLeft = `10px solid ${color}`;
 
-        // --- Configurações de Layout e Animação ---
-        const lerpFactor = 0.08; // Suavização da animação de rolagem
-        const padding = 50;
-        const cardHeight = 90;
-        const cardGap = 20;
+                // Cria o conteúdo interno do card
+                listItem.innerHTML = `
+                    <div class="conteudo">
+                        <h3 class="titulo">${item.id}. ${item.title}</h3>
+                        <p class="participantes">${item.participants}</p>
+                    </div>
+                    <div class="duracao">${item.duration} min</div>
+                `;
+                
+                list.appendChild(listItem);
+            });
+        }
+        
+        // --- Lógica para animação ao rolar a página ---
+        function setupScrollAnimations() {
+            // Seleciona todos os elementos que devem ser animados
+            const animatedElements = document.querySelectorAll('.item-programa, .detalhe-item');
 
-        function setup() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-            
-            // Recalcula a altura total do conteúdo
-            totalContentHeight = 600; // Altura estimada para o cabeçalho e detalhes
-            totalContentHeight += (eventData.program.length * (cardHeight + cardGap));
-            totalContentHeight += 150; // Espaço para o rodapé
+            // Cria um "observador" que vai monitorar quando os elementos entram na tela
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Se o elemento estiver visível na tela
+                    if (entry.isIntersecting) {
+                        // Adiciona a classe 'is-visible' para ativar a animação CSS
+                        entry.target.classList.add('is-visible');
+                        // Para de observar o elemento para não animar novamente
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1 // A animação começa quando 10% do elemento estiver visível
+            });
 
-            createParticles();
-            requestAnimationFrame(draw);
+            // Pede ao observador para monitorar cada elemento selecionado
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
         }
 
-        // --- Lógica de Partículas para o Fundo ---
-        function createParticles() {
-            const particleCount = 50;
-            particles.length = 0;
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * (totalContentHeight + height),
-                    radius: Math.random() * 2 + 1,
-                    color: [colors.primary, colors.secondary, colors.accent, colors.highlight][Math.floor(Math.random() * 4)],
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5
+        // --- Função para definir a data de geração no rodapé ---
+        function setGenerationDate() {
+            const dateElement = document.getElementById('generationDate');
+            if(dateElement) {
+                const today = new Date();
+                dateElement.textContent = today.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
                 });
             }
         }
         
-        function drawParticles() {
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0 || p.x > width) p.vx *= -1;
-                // Deixa as partículas reaparecerem no topo/fundo para um efeito infinito
-                if (p.y + scrollY < -p.radius) p.y += (totalContentHeight + height);
-                if (p.y + scrollY > height + totalContentHeight + p.radius) p.y -= (totalContentHeight + height);
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y - scrollY, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.globalAlpha = 0.5;
-                ctx.fill();
-                ctx.globalAlpha = 1;
-            });
-        }
-        
-        // --- Funções de Desenho ---
-
-        function drawHeader(yOffset) {
-            let y = yOffset;
-
-            // Animação de entrada baseada na rolagem
-            const introFactor = Math.min(1, Math.max(0, 1 - scrollY / 300));
-            
-            ctx.save();
-            ctx.translate(width / 2, y + 200 * (1 - introFactor)); // Movimento de subida
-            ctx.scale(introFactor, introFactor); // Efeito de zoom-in
-            ctx.globalAlpha = introFactor;
-
-            ctx.fillStyle = colors.dark;
-            ctx.font = `bold ${Math.min(width * 0.08, 72)}px Arial`;
-            ctx.textAlign = 'center';
-            ctx.fillText(eventData.title, 0, 0);
-
-            ctx.fillStyle = colors.primary;
-            ctx.font = `italic ${Math.min(width * 0.03, 28)}px Arial`;
-            ctx.fillText(eventData.subtitle, 0, 50);
-
-            ctx.restore();
-            return 350;
-        }
-
-        function drawDetails(yOffset) {
-            let y = yOffset;
-            const detailStartY = y;
-            const isMobile = width < 768;
-            const columns = isMobile ? 2 : 4;
-            const itemWidth = width / columns;
-
-            eventData.details.forEach((item, index) => {
-                const col = index % columns;
-                const row = Math.floor(index / columns);
-                const itemX = col * itemWidth + itemWidth / 2;
-                const itemY = y + row * 80;
-
-                // Animação de fade-in baseada no scroll
-                const revealFactor = Math.min(1, Math.max(0, (height - (itemY - scrollY)) / 200));
-
-                ctx.save();
-                ctx.globalAlpha = revealFactor;
-                ctx.translate(0, 30 * (1 - revealFactor)); // Sobe ao aparecer
-
-                ctx.fillStyle = colors.dark;
-                ctx.font = isMobile ? '24px Arial' : '30px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(item.icon, itemX, itemY);
-
-                ctx.font = isMobile ? '14px Arial' : '16px Arial';
-                ctx.fillStyle = colors.dark;
-                ctx.fillText(item.text, itemX, itemY + 30);
-
-                ctx.restore();
-            });
-
-            const rows = Math.ceil(eventData.details.length / columns);
-            return detailStartY + rows * 80 + 80; // Retorna a posição Y para o próximo elemento
-        }
-
-        function drawProgram(yOffset) {
-            let y = yOffset;
-
-            ctx.fillStyle = colors.dark;
-            ctx.font = 'bold 32px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('Programação', width / 2, y - 40);
-
-            const cardW = Math.min(800, width - padding * 2);
-            const cardX = (width - cardW) / 2;
-            
-            hoveredItemId = null; // Reseta a cada frame
-
-            eventData.program.forEach(item => {
-                const cardY = y;
-                const cardCenterY = cardY + cardHeight / 2 - scrollY;
-
-                // Verifica se o card está na tela para otimizar o desenho
-                if (cardY - scrollY > height || cardY - scrollY < -cardHeight) {
-                    y += cardHeight + cardGap;
-                    return;
-                }
-
-                // Detecção de Hover
-                const isHovered = mouse.x > cardX && mouse.x < cardX + cardW &&
-                                  mouse.y > cardY - scrollY && mouse.y < cardY - scrollY + cardHeight;
-                if(isHovered) {
-                    hoveredItemId = item.id;
-                }
-                
-                // Animações de Hover
-                const scale = isHovered ? 1.02 : 1.0;
-                const shadowBlur = isHovered ? 20 : 10;
-                const shadowColor = isHovered ? colors.primary : 'rgba(0,0,0,0.1)';
-
-                ctx.save();
-                // Animação de entrada dos cards
-                const revealFactor = Math.min(1, Math.max(0, (height - (cardY - scrollY)) / 250));
-                ctx.globalAlpha = revealFactor;
-                ctx.translate(cardX + cardW / 2, cardY + cardHeight / 2);
-                ctx.translate(50 * (1-revealFactor), 0); // Desliza da direita
-                ctx.scale(scale, scale);
-                ctx.translate(-(cardX + cardW / 2), -(cardY + cardHeight / 2));
-                
-                // Desenho do Card
-                ctx.shadowColor = shadowColor;
-                ctx.shadowBlur = shadowBlur;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 4;
-
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.roundRect(cardX, cardY, cardW, cardHeight, 15);
-                ctx.fill();
-
-                ctx.shadowColor = 'transparent'; // Reseta sombra para o texto
-
-                // Linha colorida lateral
-                const accentColors = [colors.primary, colors.secondary, colors.accent, colors.highlight];
-                ctx.fillStyle = accentColors[item.id % accentColors.length];
-                ctx.beginPath();
-                ctx.roundRect(cardX, cardY, 10, cardHeight, [15, 0, 0, 15]);
-                ctx.fill();
-
-                // Conteúdo do Card
-                ctx.textAlign = 'left';
-                ctx.fillStyle = colors.secondary;
-                ctx.font = 'bold 18px Arial';
-                ctx.fillText(`${item.id}. ${item.title}`, cardX + 30, cardY + 30);
-                
-                ctx.fillStyle = colors.dark;
-                ctx.font = '14px Arial';
-                ctx.fillText(item.participants, cardX + 30, cardY + 55);
-
-                ctx.textAlign = 'right';
-                ctx.fillStyle = colors.dark;
-                ctx.font = 'italic 16px Arial';
-                ctx.fillText(`${item.duration} min`, cardX + cardW - 30, cardY + 35);
-                
-                ctx.restore();
-
-                y += cardHeight + cardGap;
-            });
-        }
-
-        function drawFooter(yOffset) {
-            let y = yOffset;
-            const footerHeight = 100;
-            const footerY = Math.max(height - footerHeight, y - scrollY); // Fixa no fundo se houver espaço
-            
-            ctx.fillStyle = colors.dark;
-            ctx.fillRect(0, footerY, width, footerHeight);
-
-            const generationDate = new Date().toLocaleDateString('pt-BR', {
-                day: '2-digit', month: '2-digit', year: 'numeric'
-            });
-
-            ctx.fillStyle = colors.light;
-            ctx.font = '14px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(`Página formatada por IA baseada em um texto enviado pelo usuário. Gerado em ${generationDate}.`, width / 2, footerY + footerHeight / 2);
-        }
-
-        function drawScrollbar() {
-            if (totalContentHeight <= height) return;
-
-            const scrollbarWidth = 8;
-            const scrollbarX = width - scrollbarWidth - 5;
-            const scrollbarHeight = height;
-            
-            // Pista da barra de rolagem
-            ctx.fillStyle = '#e0e0e0';
-            ctx.fillRect(scrollbarX, 0, scrollbarWidth, scrollbarHeight);
-
-            // Handle da barra de rolagem
-            const handleHeight = height * (height / totalContentHeight);
-            const handleY = (scrollY / (totalContentHeight - height)) * (height - handleHeight);
-            
-            ctx.fillStyle = colors.primary;
-            ctx.globalAlpha = 0.8;
-            ctx.beginPath();
-            ctx.roundRect(scrollbarX, handleY, scrollbarWidth, handleHeight, 4);
-            ctx.fill();
-            ctx.globalAlpha = 1;
-        }
-
-        // --- Loop Principal de Animação ---
-        function draw() {
-            // Animação suave da rolagem
-            scrollY += (targetScrollY - scrollY) * lerpFactor;
-            
-            // Limpa o canvas
-            ctx.fillStyle = colors.light;
-            ctx.fillRect(0, 0, width, height);
-
-            // Desenha as partículas de fundo
-            drawParticles();
-
-            // Começa a desenhar os elementos
-            ctx.save();
-            ctx.translate(0, -scrollY); // Aplica a rolagem global
-
-            let currentY = 100;
-            currentY = drawHeader(currentY);
-            currentY = drawDetails(currentY);
-            drawProgram(currentY);
-            drawFooter(totalContentHeight - 100);
-
-            ctx.restore();
-
-            // Desenha elementos da UI que não rolam (como a barra de rolagem)
-            drawScrollbar();
-
-            // Muda o cursor do mouse se estiver sobre um item
-            canvas.style.cursor = hoveredItemId !== null ? 'pointer' : 'default';
-
-            requestAnimationFrame(draw);
-        }
-
-        // --- Event Listeners ---
-        window.addEventListener('resize', setup);
-
-        window.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            targetScrollY += e.deltaY;
-            // Limita a rolagem
-            targetScrollY = Math.max(0, Math.min(targetScrollY, totalContentHeight - height));
-        }, { passive: false });
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
+        // --- Executa as funções quando o documento estiver pronto ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateProgramList();
+            setGenerationDate();
+            setupScrollAnimations();
         });
 
-        // --- Iniciar ---
-        setup();
     </script>
 </body>
 </html>
