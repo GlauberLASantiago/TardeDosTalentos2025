@@ -74,6 +74,12 @@
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            /* Adicionado para centralizar o conteúdo verticalmente */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px; /* Garante altura mínima para alinhamento */
         }
 
         .detalhe-item.is-visible {
@@ -207,11 +213,9 @@
 
         <section class="detalhes">
             <div class="detalhe-item">
-                <span>📅</span>
                 <p>11/10</p>
             </div>
             <div class="detalhe-item">
-                <span>📍</span>
                 <p>Salão Social da Igreja</p>
             </div>
             <div class="detalhe-item">
@@ -246,18 +250,18 @@
                 { id: 3, title: 'Dueto de Violinos', duration: 4, participants: 'Henrique Santos e Sophie Tassi' },
                 { id: 4, title: 'Turma de Violinos da Escola de Música', duration: 3, participants: 'Ângela Matheus, Evani Machado, Davi Neves, Elizabeth Santiago, Estela Diniz' },
                 { id: 5, title: 'Dupla Fênix', duration: 3, participants: 'Paulo Ricardo e João Pedro' },
-                { id: 6, title: 'Gênesis à Paulo', duration: 5, participants: 'Paulo, Abner, Estela, Estevão, Glauber' },
+                { id: 6, title: 'Gênesis à Paulo', duration: 5, participants: 'Paulo Ricardo, Abner Diniz, Estela Diniz, Estevão Diniz e Glauber Santiago' },
                 { id: 7, title: 'Imagens e Versos desse Universo', duration: 3, participants: 'Ciro Cellurale' },
-                { id: 8, title: 'Dueto no Piano', duration: 5, participants: 'Pedro Theodoro e Henrique Bianch' },
-                { id: 9, title: 'Crer e Observar', duration: 1, participants: 'Henrique Bianch' },
+                { id: 8, title: 'Dueto no Piano', duration: 5, participants: 'Pedro Theodoro e Henrique Bianchi' },
+                { id: 9, title: 'Crer e Observar', duration: 1, participants: 'Henrique Bianchi' },
                 { id: 10, title: 'Xilofonando', duration: 2, participants: 'Maria Eliza' },
                 { id: 11, title: 'Vitrola Falante', duration: 4, participants: 'Davi Neves' },
                 { id: 12, title: 'Rúach Elohím', duration: 5, participants: 'Gidenilson Santiago e Glauber Santiago' },
                 { id: 13, title: 'Teus Altares', duration: 4, participants: 'Gidenilson Santiago' },
-                { id: 14, title: 'Guitarra Havawana Blues', duration: 2, participants: 'Glauber Santiago' },
+                { id: 14, title: 'Guitarra Hawaiana Blues', duration: 2, participants: 'Glauber Santiago' },
                 { id: 15, title: 'Palestra', duration: 5, participants: 'Deise Pádua Silva' },
                 { id: 16, title: 'Cantar', duration: 5, participants: 'Karen de Souza' },
-                { id: 17, title: 'Lotação Máxima', duration: 5, participants: 'Paulo, Estevão, Abner, Estela, Sophie, Samuell, João' },
+                { id: 17, title: 'Lotação Máxima', duration: 5, participants: 'Paulo, Estevão, Abner, Estela, Sophie, Samuell, João, Lucas Carvalho' },
                 { id: 18, title: 'Batman e Robin', duration: 5, participants: 'Estevão Diniz e Arthur Diniz' },
                 { id: 19, title: 'Família Luchnos', duration: 5, participants: 'Priscila, Estevão, Abner, Estela, Ariela, Arthur (todos Diniz)' },
                 { id: 20, title: 'Sr. Arlindo', duration: 5, participants: 'Arlindo Pinguieri' }
@@ -342,4 +346,5 @@
     </script>
 </body>
 </html>
+
 
