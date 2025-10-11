@@ -21,8 +21,8 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--cor-clara);
-            color: var(--cor-escura);
+            background-color: #183E0C; /* Fundo de página modificado */
+            color: #F0F0F0; /* Cor de texto principal ajustada para o fundo escuro */
             overflow-x: hidden; /* Evita rolagem horizontal */
         }
 
@@ -45,13 +45,13 @@
 
         header h1 {
             font-size: 3rem;
-            color: var(--cor-escura);
+            color: var(--cor-clara); /* Garante que o título seja claro */
             margin: 0;
         }
 
         header p {
             font-size: 1.2rem;
-            color: var(--cor-primaria);
+            color: #cccccc; /* Cor ajustada para melhor contraste */
             margin-top: 10px;
         }
 
@@ -69,6 +69,7 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 15px var(--cor-sombra);
+            color: var(--cor-escura); /* Garante que o texto dentro dos cards seja escuro */
             /* Animação de entrada (será controlada por JS) */
             opacity: 0;
             transform: translateY(20px);
@@ -125,6 +126,7 @@
             position: relative;
             overflow: hidden; /* Para a linha lateral */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: var(--cor-escura); /* Garante que o texto dentro dos cards seja escuro */
             /* Animação de entrada (será controlada por JS) */
             opacity: 0;
             transform: translateX(30px);
@@ -199,7 +201,7 @@
 
     <div class="container">
         <header>
-            <h1>Tarde de Talentos</h1>
+            <h1>Tarde de Talentos 2025</h1>
             <p>Igreja Presbiteriana Filadélfia de São Carlos</p>
         </header>
 
